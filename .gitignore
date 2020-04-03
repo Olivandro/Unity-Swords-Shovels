@@ -1,0 +1,68 @@
+###
+# Unity folders and files
+###
+/swords-shovels-source/[Aa]ssets/AssetStoreTools*
+/swords-shovels-source/[Bb]uild/
+/swords-shovels-source/[Ll]ibrary/
+/swords-shovels-source/[Ll]ocal[Cc]ache/
+/swords-shovels-source/[Oo]bj/
+/swords-shovels-source/[Tt]emp/
+/swords-shovels-source/[Uu]nityGenerated/
+# file on crash reports
+sysinfo.txt
+# Unity3D generated meta files
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Asset meta data should only be ignored when the corresponding asset is also ignored
+!/[Aa]ssets/**/*.meta
+
+# Packed Addressables
+/swords-shovels-source/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+
+# Temporary auto-generated Android Assets
+/swords-shovels-source/[Aa]ssets/[Ss]treamingAssets/aa.meta
+/swords-shovels-source/[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Visual Studio cache directory
+.vs/
+
+# Builds
+*.apk
+*.unitypackage
+
+###
+# VS/MD solution and project files
+###
+ExportedObj/
+.consulo/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+###
+# OS generated
+###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Crashlytics generated file
+crashlytics-build.properties
