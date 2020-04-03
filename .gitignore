@@ -27,6 +27,8 @@ sysinfo.txt
 
 # Visual Studio cache directory
 .vs/
+.vscode/
+.vscode/*
 
 # Builds
 *.apk
