@@ -3,20 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+
 public class GameManager : Singleton<GameManager>
 {
 
-    // 3. keep track of game state
-    // 4. generate other persistant systems
-    // 
 
     #region Variable declarations
+
+    public enum GameState
+    {
+        PREGAME,
+        RUNNING,
+        PAUSED
+    }
 
     public GameObject[] SystemPrefabs;
     // REMEMBER you can only Count these, can't use Length
     private List<GameObject> _instancedSystemPrefabs;
     private string _currentLevelName = string.Empty;
     private List<AsyncOperation> _loadOperations;
+    private GameState _currentGameState = GameState.PREGAME;
+
+    public GameState CurrentGameState
+    {
+        get { return _currentGameState; }
+        private set { _currentGameState = value; }
+    }
+
+    public Events.EventGameState OnGameStateChanged;
 
     #endregion
     
@@ -33,7 +48,62 @@ public class GameManager : Singleton<GameManager>
         _loadOperations = new List<AsyncOperation>();
         InstantiateSystemPrefab();
 
-        LoadLevel("Main");
+        UIManager.Instance.OnMainMenuFadeComplete.AddListener(HandleMainMenuFadeComplete);
+
+        // LoadLevel("Main");
+    }
+
+    private void Update() 
+    {
+        if (_currentGameState == GameState.PREGAME)
+        {
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+            // GameManager.Instance.StartGame();
+            // _mainMenu.FadeOut();
+        }    
+    }
+
+    private void UpdateState(GameState state)
+    {
+        GameState _previousGameState = _currentGameState;
+        // This might be a problem child...
+        // Keep track off and see if your 
+        // have to appy ToString() to each
+        // case.
+        _currentGameState = state;
+
+        switch (_currentGameState)
+        {
+            case GameState.PREGAME:
+                Time.timeScale = 1.0f;
+                break;
+
+            case GameState.RUNNING:
+                Time.timeScale = 1.0f;
+                break;
+
+            case GameState.PAUSED:
+                Time.timeScale = 0.0f;
+                break;
+
+            default:
+                break;
+        }
+
+        OnGameStateChanged.Invoke(_currentGameState, _previousGameState);
+    }
+
+    private void HandleMainMenuFadeComplete(bool fadeOut)
+    {
+        if (!fadeOut)
+        {
+            UnloadLevel(_currentLevelName);
+        }
+        
     }
 
     #region Load methods
@@ -71,6 +141,10 @@ public class GameManager : Singleton<GameManager>
         {
             _loadOperations.Remove(ao);
 
+            if (_loadOperations.Count == 0)
+            {
+                 UpdateState(GameState.RUNNING);
+            }
             // dispatch messages
             // transition between scenes
         }
@@ -107,5 +181,37 @@ public class GameManager : Singleton<GameManager>
     }
 
     #endregion
-    
+
+
+    public void StartGame()
+    {
+        LoadLevel("Main");
+    }
+
+    public void TogglePause()
+    {
+        // if (_currentGameState == GameState.RUNNING)
+        // {
+        //     UpdateState(GameState.PAUSED);
+        // }
+        // else
+        // {
+        //     UpdateState(GameState.RUNNING);
+        // }
+
+        UpdateState(_currentGameState == GameState.RUNNING ? GameState.PAUSED : GameState.RUNNING);
+    }
+
+    public void RestartGame()
+    {
+        UpdateState(GameState.PREGAME);
+    }
+
+    public void QuitGame()
+    {
+        // Clean up 
+        // Autosaving
+        Application.Quit();
+        
+    }
 }
